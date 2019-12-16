@@ -43,13 +43,14 @@ class BirdFragment : Fragment() {
 
         val size = Point()
         requireActivity().windowManager.defaultDisplay.getSize(size)
-        game = Game(requireContext(), size)
+        game = Game(requireContext(), size, this::onEndGame)
         game_container.addView(game)
     }
 
     override fun onResume() {
         super.onResume()
         game?.start()
+        game?.pause = false
     }
 
     override fun onPause() {
@@ -60,5 +61,9 @@ class BirdFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         game = null
+    }
+
+    private fun onEndGame(isWin : Boolean) : Unit{
+
     }
 }

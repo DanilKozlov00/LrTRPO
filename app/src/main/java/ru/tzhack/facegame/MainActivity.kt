@@ -1,38 +1,46 @@
 package ru.tzhack.facegame
 
-import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
-import kotlinx.android.synthetic.main.activity_main.*
 import ru.tzhack.facegame.bird.BirdFragment
-import ru.tzhack.facegame.bird.BirdGameControlListener
 import ru.tzhack.facegame.facetraking.FaceGameOverListener
-import ru.tzhack.facegame.facetraking.FaceTrackingFragment
 
 private const val CAMERA_PERMISSION_REQUEST_CODE = 101
 
-class MainActivity : AppCompatActivity(), BirdGameControlListener, FaceGameOverListener, StartGameListener {
+
+//TODO: ЗАДАНИЕ #2
+/**
+ * Задание №2.
+ *
+ * Создание Logo Screen.
+ *
+ * Данная Activity будет отвечать за всю координацию в нашем приложении.
+ * Все переключения фрагментов будут выполняться именно здесь.
+ *
+ * В этом же месте, необходимо будет запросить Permission на камеру.
+ *
+ *
+ * */
+
+class MainActivity : AppCompatActivity(), /*BirdGameControlListener,*/ FaceGameOverListener, StartGameListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        showMainFragment()
+        showBonusGameFragment()
     }
 
     override fun onStartClick() {
         showGameFragment()
     }
 
-
-    override fun onBirdGameOver() {
-        showMainFragment()
-    }
+    //TODO: это делают ребята с игрой
+//    override fun onBirdGameOver() {
+//        showMainFragment()
+//    }
 
     override fun onFaceGameOverPositive() {
         showBonusGameFragment()
@@ -44,40 +52,38 @@ class MainActivity : AppCompatActivity(), BirdGameControlListener, FaceGameOverL
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 showGameFragment()
             } else {
-                finish()
+                //TODO: Если не дали разрешение - закрываем игру
             }
         }
     }
 
     private fun hasCameraPermissions(): Boolean {
-        return ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
+        //TODO: ContextCompat.checkSelfPermission(...)
+        //TODO: PackageManager.PERMISSION_GRANTED
+        return false
     }
 
     private fun showGameFragment() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (hasCameraPermissions()) {
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, FaceTrackingFragment.createFragment(), FaceTrackingFragment.TAG)
-                    .commit()
+                //TODO: fragmentManager -> replace FaceTrackingFragment
             } else {
-                requestPermissions(arrayOf(Manifest.permission.CAMERA), CAMERA_PERMISSION_REQUEST_CODE)
+                //TODO: запрос разрешения на камеру
+                //TODO: requestPermissions(...)
             }
         } else {
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, FaceTrackingFragment.createFragment(), FaceTrackingFragment.TAG)
-                .commit()
+            //TODO: fragmentManager -> replace FaceTrackingFragment
         }
     }
 
     private fun showMainFragment() {
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, MainFragment.createFragment(), MainFragment.TAG)
-            .commit()
+        //TODO: fragmentManager -> replace MainFragment (Logo Screen)
     }
 
     private fun showBonusGameFragment() {
         supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, BirdFragment.createFragment(), BirdFragment.TAG)
-            .commit()
+                .replace(R.id.fragment_container, BirdFragment.createFragment())
+                .commit()
+        //TODO: fragmentManager -> replace BirdFragment
     }
 }
